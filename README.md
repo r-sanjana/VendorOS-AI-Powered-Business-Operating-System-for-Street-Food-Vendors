@@ -35,5 +35,3 @@ Testing:
 
 
 
-uvicorn app.main:app --reload
-
