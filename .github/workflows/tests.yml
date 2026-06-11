@@ -25,5 +25,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Tests
+        env:
+          DATABASE_URL: sqlite+aiosqlite:///./test.db
+          SECRET_KEY: test-secret-key
+          ACCESS_TOKEN_EXPIRE_MINUTES: 60
         run: |
           pytest tests -v
