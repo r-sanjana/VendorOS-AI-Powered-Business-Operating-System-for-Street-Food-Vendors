@@ -153,3 +153,4 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
         await conn.run_sync(Base.metadata.drop_all)
 
     await test_engine.dispose()
+    await session.close()
