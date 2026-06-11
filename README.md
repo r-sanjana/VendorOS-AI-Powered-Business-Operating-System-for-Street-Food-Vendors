@@ -24,15 +24,7 @@ The platform enables vendors to:
 
 ### Backend API
 
-https://vendoros-backend.onrender.com
-
-### Swagger Documentation
-
 https://vendoros-backend.onrender.com/api/docs
-
-### ReDoc Documentation
-
-https://vendoros-backend.onrender.com/api/redoc
 
 ### Health Check
 
