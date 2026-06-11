@@ -140,3 +140,16 @@ async def vendor_token(client: AsyncClient, vendor_user: User) -> str:
 def auth_headers(token: str) -> dict:
     """Return an Authorization header dict for use in client requests."""
     return {"Authorization": f"Bearer {token}"}
+
+@pytest_asyncio.fixture(scope="function")
+async def db_session() -> AsyncGenerator[AsyncSession, None]:
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
+    async with TestSessionLocal() as session:
+        yield session
+
+    async with test_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+
+    await test_engine.dispose()
