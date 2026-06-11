@@ -4,8 +4,7 @@ Provides an async test client, in-memory SQLite database,
 and reusable fixtures for every test module.
 """
 
-import asyncio
-from typing import AsyncGenerator, Generator
+from typing import AsyncGenerator
 
 import pytest
 import pytest_asyncio
@@ -35,17 +34,6 @@ TestSessionLocal = async_sessionmaker(
     autoflush=False,
     autocommit=False,
 )
-
-
-# ── Event loop ────────────────────────────────────────────────────────────────
-
-@pytest.fixture(scope="session")
-def event_loop() -> Generator:
-    """Create a session-scoped event loop."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
-
 
 # ── Database setup / teardown ─────────────────────────────────────────────────
 
