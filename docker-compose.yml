@@ -1,0 +1,99 @@
+version: "3.9"
+
+# ── VendorOS Local Development Stack ─────────────────────────────────────────
+# Services:
+#   postgres  – primary database
+#   backend   – FastAPI application
+#   pgadmin   – optional DB admin UI (http://localhost:5050)
+#
+# Usage:
+#   docker compose up -d          # start all services
+#   docker compose logs -f backend # stream app logs
+#   docker compose down -v        # stop + remove volumes
+
+services:
+
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:15-alpine
+    container_name: vendoros_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: vendoros_user
+      POSTGRES_PASSWORD: vendoros_pass
+      POSTGRES_DB: vendoros_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vendoros_user -d vendoros_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - vendoros_net
+
+  # ── FastAPI Backend ─────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runtime
+    container_name: vendoros_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://vendoros_user:vendoros_pass@postgres:5432/vendoros_db
+      ENVIRONMENT: development
+      DEBUG: "True"
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # Hot-reload in dev: mount source over the container copy
+      - ./app:/app/app:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
+    networks:
+      - vendoros_net
+
+  # ── pgAdmin (optional) ──────────────────────────────────────────────────────
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: vendoros_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@vendoros.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - vendoros_net
+    profiles:
+      - debug   # only starts with: docker compose --profile debug up
+
+# ── Volumes ────────────────────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+
+# ── Network ────────────────────────────────────────────────────────────────────
+networks:
+  vendoros_net:
+    driver: bridge
