@@ -18,11 +18,94 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     # ── Enums ─────────────────────────────────────────────────────────────────
-    op.execute("CREATE TYPE userrole AS ENUM ('ADMIN','VENDOR','EMPLOYEE','CUSTOMER')")
-    op.execute("CREATE TYPE inventorycategory AS ENUM ('RICE','OIL','CHICKEN','SPICES','VEGETABLES','PACKAGING','BEVERAGES','OTHER')")
-    op.execute("CREATE TYPE movementtype AS ENUM ('IN','OUT','WASTE','ADJUST')")
-    op.execute("CREATE TYPE paymentmethod AS ENUM ('CASH','UPI','CARD')")
-    op.execute("CREATE TYPE expensecategory AS ENUM ('RAW_MATERIALS','GAS','ELECTRICITY','RENT','TRANSPORTATION','SALARY','MAINTENANCE','MARKETING','OTHER')")
+
+    op.execute("""
+    DO $$
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_type WHERE typname = 'userrole'
+        ) THEN
+            CREATE TYPE userrole AS ENUM (
+                'ADMIN',
+                'VENDOR',
+                'EMPLOYEE',
+                'CUSTOMER'
+            );
+        END IF;
+    END $$;
+    """)
+
+    op.execute("""
+    DO $$
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_type WHERE typname = 'inventorycategory'
+        ) THEN
+            CREATE TYPE inventorycategory AS ENUM (
+                'RICE',
+                'OIL',
+                'CHICKEN',
+                'SPICES',
+                'VEGETABLES',
+                'PACKAGING',
+                'BEVERAGES',
+                'OTHER'
+            );
+        END IF;
+    END $$;
+    """)
+
+    op.execute("""
+    DO $$
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_type WHERE typname = 'movementtype'
+        ) THEN
+            CREATE TYPE movementtype AS ENUM (
+                'IN',
+                'OUT',
+                'WASTE',
+                'ADJUST'
+            );
+        END IF;
+    END $$;
+    """)
+
+    op.execute("""
+    DO $$
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_type WHERE typname = 'paymentmethod'
+        ) THEN
+            CREATE TYPE paymentmethod AS ENUM (
+                'CASH',
+                'UPI',
+                'CARD'
+            );
+        END IF;
+    END $$;
+    """)
+
+    op.execute("""
+    DO $$
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1 FROM pg_type WHERE typname = 'expensecategory'
+        ) THEN
+            CREATE TYPE expensecategory AS ENUM (
+                'RAW_MATERIALS',
+                'GAS',
+                'ELECTRICITY',
+                'RENT',
+                'TRANSPORTATION',
+                'SALARY',
+                'MAINTENANCE',
+                'MARKETING',
+                'OTHER'
+            );
+        END IF;
+    END $$;
+    """)
 
     # ── users ─────────────────────────────────────────────────────────────────
     op.create_table(
