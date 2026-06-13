@@ -3,6 +3,12 @@ VendorOS - Alembic Migration Environment
 Configures async migrations using SQLAlchemy 2.x + asyncpg.
 """
 
+import sys
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
 import asyncio
 from logging.config import fileConfig
 from typing import Optional
