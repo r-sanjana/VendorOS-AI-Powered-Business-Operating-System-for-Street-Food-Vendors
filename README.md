@@ -327,20 +327,6 @@ Deployment Ready
 
 ---
 
-## 👩‍💻 Developer
-
-**Sanjana R**
-
-AIML Engineering Student
-
-### Project
-
-**VendorOS – AI-Powered Business Operating System for Street Food Vendors**
-
-A production-grade backend platform built using modern software engineering practices, machine learning, automated testing, CI/CD, PostgreSQL, and cloud deployment.
-
----
-
 ## ⭐ Key Achievements
 
 - ✅ Production Deployment on Render
@@ -352,5 +338,19 @@ A production-grade backend platform built using modern software engineering prac
 - ✅ Interactive API Documentation
 - ✅ Scalable SaaS Architecture
 - ✅ Cloud-Native Infrastructure
+
+---
+
+## 👩‍💻 Developer
+
+**Sanjana R**
+
+Artificial Intelligence and Machine Learning Engineering Student
+
+### Project
+
+**VendorOS – AI-Powered Business Operating System for Street Food Vendors**
+
+A production-grade backend platform built using modern software engineering practices, machine learning, automated testing, CI/CD, PostgreSQL, and cloud deployment.
 
 ---
