@@ -346,11 +346,3 @@ Deployment Ready
 **Sanjana R**
 
 Artificial Intelligence and Machine Learning Engineering Student
-
-### Project
-
-**VendorOS – AI-Powered Business Operating System for Street Food Vendors**
-
-A production-grade backend platform built using modern software engineering practices, machine learning, automated testing, CI/CD, PostgreSQL, and cloud deployment.
-
----
